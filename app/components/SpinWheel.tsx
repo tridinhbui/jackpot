@@ -4,85 +4,100 @@ import { useState } from 'react';
 
 interface SpinWheelProps {
   onSpinComplete: (reward: string) => void;
+  isLocked: boolean;
 }
 
-const SpinWheel = ({ onSpinComplete }: SpinWheelProps) => {
+const SpinWheel = ({ onSpinComplete, isLocked }: SpinWheelProps) => {
   const [isSpinning, setIsSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
 
   const segments = [
-    { text: '$500', color: 'bg-gradient-to-br from-gray-900 to-black' },
-    { text: '$50', color: 'bg-gradient-to-br from-gray-100 to-gray-200' },
-    { text: '$200', color: 'bg-gradient-to-br from-gray-900 to-black' },
-    { text: '$25', color: 'bg-gradient-to-br from-gray-100 to-gray-200' },
-    { text: '$1000', color: 'bg-gradient-to-br from-gray-900 to-black' },
-    { text: '$75', color: 'bg-gradient-to-br from-gray-100 to-gray-200' },
-    { text: '$300', color: 'bg-gradient-to-br from-gray-900 to-black' },
-    { text: '$100', color: 'bg-gradient-to-br from-gray-100 to-gray-200' },
-    { text: '$250', color: 'bg-gradient-to-br from-gray-900 to-black' },
-    { text: '$150', color: 'bg-gradient-to-br from-gray-100 to-gray-200' },
+    { text: 'Gel Polish Add-On', subtext: '($20)', color: 'from-pink-400 to-pink-500', textColor: 'text-white' },
+    { text: 'Hydration Package', subtext: '($15)', color: 'from-gray-100 to-gray-200', textColor: 'text-gray-900' },
+    { text: '$10 Off Gift Card', subtext: '', color: 'from-purple-400 to-purple-500', textColor: 'text-white' },
+    { text: 'Free Nail Design', subtext: '(up to $15)', color: 'from-gray-100 to-gray-200', textColor: 'text-gray-900' },
+    { text: 'Elite Package', subtext: '($25)', color: 'from-indigo-400 to-indigo-500', textColor: 'text-white' },
+    { text: '25% Off Total Bill', subtext: '', color: 'from-gray-100 to-gray-200', textColor: 'text-gray-900' },
   ];
 
   const segmentAngle = 360 / segments.length;
 
   const handleSpin = () => {
-    if (isSpinning) return;
+    if (isSpinning || isLocked) return;
 
     setIsSpinning(true);
     
-    // Random rotations between 1080deg (3 rounds) and 1800deg (5 rounds)
-    const minRotation = 1080;
-    const maxRotation = 1800;
+    const minRotation = 1440; // 4 rounds
+    const maxRotation = 2160; // 6 rounds
     const randomRotation = Math.floor(Math.random() * (maxRotation - minRotation + 1)) + minRotation;
     const newRotation = rotation + randomRotation;
     
     setRotation(newRotation);
 
-    // After animation completes (3 seconds), show the result
     setTimeout(() => {
       setIsSpinning(false);
-      // Determine which segment won based on final rotation
       const normalizedRotation = newRotation % 360;
       const segmentIndex = Math.floor((360 - normalizedRotation + segmentAngle / 2) / segmentAngle) % segments.length;
       onSpinComplete(segments[segmentIndex].text);
-    }, 3000);
+    }, 4000);
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-8">
+    <div className="flex flex-col items-center justify-center gap-6">
+      {/* Lock Overlay */}
+      {isLocked && (
+        <div className="absolute inset-0 bg-black/30 backdrop-blur-sm rounded-3xl z-30 flex items-center justify-center">
+          <div className="bg-white rounded-2xl p-6 shadow-2xl text-center">
+            <div className="text-5xl mb-3">🔒</div>
+            <p className="text-xl font-bold text-gray-900 mb-2">Fill the form to unlock!</p>
+            <p className="text-sm text-gray-600">Complete your information to spin the wheel</p>
+          </div>
+        </div>
+      )}
+
       {/* Wheel Container */}
       <div className="relative">
         {/* Fixed Pointer */}
-        <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 z-20">
-          <div className="w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[30px] border-t-black drop-shadow-lg" />
+        <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 z-20">
+          <div className="relative">
+            <div className="w-0 h-0 border-l-[20px] border-l-transparent border-r-[20px] border-r-transparent border-t-[40px] border-t-red-600 drop-shadow-2xl" />
+            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-red-600 rounded-full -mt-1" />
+          </div>
         </div>
 
         {/* Wheel */}
         <div 
-          className="relative w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-full shadow-2xl"
+          className={`relative w-80 h-80 sm:w-96 sm:h-96 lg:w-[28rem] lg:h-[28rem] rounded-full shadow-2xl ${
+            isLocked ? 'opacity-50' : ''
+          }`}
           style={{
-            background: 'linear-gradient(135deg, #ffffff 0%, #e5e5e5 100%)',
+            background: 'linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%)',
             transform: `rotate(${rotation}deg)`,
-            transition: isSpinning ? 'transform 3s cubic-bezier(0.25, 0.1, 0.25, 1)' : 'none',
+            transition: isSpinning ? 'transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)' : 'none',
           }}
         >
           {/* Glossy highlight overlay */}
-          <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/40 via-transparent to-transparent pointer-events-none" />
+          <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/50 via-transparent to-transparent pointer-events-none" />
+
+          {/* Outer Border */}
+          <div className="absolute inset-0 rounded-full border-8 border-gray-800" />
+
+          {/* Inner Border */}
+          <div className="absolute inset-4 rounded-full border-4 border-gray-300" />
 
           {/* Center Circle */}
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-gray-800 to-black shadow-lg flex items-center justify-center z-10">
-            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center border-2 border-white/20">
-              <div className="text-center">
-                <div className="text-white font-bold text-xs sm:text-sm">BONUS</div>
-                <div className="text-white font-bold text-xs sm:text-sm">COUPONS</div>
-              </div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 sm:w-36 sm:h-36 rounded-full bg-gradient-to-br from-gray-900 via-gray-800 to-black shadow-2xl flex items-center justify-center z-10 border-4 border-white">
+            <div className="text-center">
+              <div className="text-white font-bold text-lg sm:text-xl">SPIN</div>
+              <div className="text-white font-bold text-lg sm:text-xl">TO WIN</div>
+              <div className="text-yellow-400 text-2xl mt-1">✨</div>
             </div>
           </div>
 
           {/* Segments */}
           {segments.map((segment, index) => {
             const rotation = index * segmentAngle;
-            const isBlack = segment.color.includes('gray-900');
+            
             return (
               <div
                 key={index}
@@ -91,18 +106,23 @@ const SpinWheel = ({ onSpinComplete }: SpinWheelProps) => {
                   clipPath: `polygon(50% 50%, ${50 + 50 * Math.cos((rotation - 90) * Math.PI / 180)}% ${50 + 50 * Math.sin((rotation - 90) * Math.PI / 180)}%, ${50 + 50 * Math.cos((rotation + segmentAngle - 90) * Math.PI / 180)}% ${50 + 50 * Math.sin((rotation + segmentAngle - 90) * Math.PI / 180)}%)`,
                 }}
               >
-                <div className={`w-full h-full ${segment.color}`}>
+                <div className={`w-full h-full bg-gradient-to-br ${segment.color}`}>
                   {/* Segment Text */}
                   <div
-                    className={`absolute ${isBlack ? 'text-white' : 'text-gray-900'} font-bold text-base sm:text-lg`}
+                    className={`absolute font-bold ${segment.textColor}`}
                     style={{
                       top: '50%',
                       left: '50%',
-                      transform: `rotate(${rotation + segmentAngle / 2}deg) translateY(-130px)`,
+                      transform: `rotate(${rotation + segmentAngle / 2}deg) translateY(-145px)`,
                       transformOrigin: 'center',
+                      width: '120px',
+                      textAlign: 'center',
                     }}
                   >
-                    {segment.text}
+                    <div className="text-sm leading-tight">{segment.text}</div>
+                    {segment.subtext && (
+                      <div className="text-xs opacity-90 mt-1">{segment.subtext}</div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -117,18 +137,24 @@ const SpinWheel = ({ onSpinComplete }: SpinWheelProps) => {
       {/* Spin Button */}
       <button
         onClick={handleSpin}
-        disabled={isSpinning}
-        className="px-8 py-4 bg-gradient-to-r from-gray-800 to-black text-white font-bold text-lg rounded-full shadow-lg hover:shadow-xl hover:scale-105 transform transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+        disabled={isSpinning || isLocked}
+        className={`px-10 py-5 bg-gradient-to-r from-red-500 to-red-600 text-white font-bold text-xl rounded-full shadow-2xl hover:shadow-3xl hover:scale-110 transform transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 ${
+          isLocked ? 'cursor-not-allowed' : ''
+        }`}
       >
-        {isSpinning ? 'Spinning...' : 'SPIN NOW'}
+        {isLocked ? '🔒 LOCKED' : isSpinning ? '🎰 SPINNING...' : '🎯 SPIN NOW!'}
       </button>
 
-      {/* Aventus Spa Branding */}
-      <div className="text-center mt-4">
-        <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-gray-700 to-black bg-clip-text text-transparent">
-          Aventus Spa
-        </h2>
-        <p className="text-gray-600 text-sm sm:text-base">Premium Nail Salon Experience</p>
+      {/* Prize List */}
+      <div className="mt-4 text-center">
+        <p className="text-sm text-gray-600 font-semibold mb-2">Win One of These Amazing Prizes:</p>
+        <div className="flex flex-wrap justify-center gap-2 text-xs text-gray-500">
+          {segments.map((seg, i) => (
+            <span key={i} className="bg-gray-100 px-3 py-1 rounded-full">
+              {seg.text} {seg.subtext}
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   );

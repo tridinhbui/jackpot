@@ -12,25 +12,25 @@ interface ResultModalProps {
 const ResultModal = ({ isOpen, reward, onClose }: ResultModalProps) => {
   useEffect(() => {
     if (isOpen) {
-      // Trigger confetti animation with black/white theme
-      const duration = 3000;
+      // Trigger confetti animation
+      const duration = 4000;
       const end = Date.now() + duration;
 
-      const colors = ['#000000', '#ffffff', '#404040', '#808080'];
+      const colors = ['#9333ea', '#ec4899', '#ef4444', '#f59e0b', '#10b981'];
 
       (function frame() {
         confetti({
-          particleCount: 3,
+          particleCount: 5,
           angle: 60,
-          spread: 55,
-          origin: { x: 0 },
+          spread: 70,
+          origin: { x: 0, y: 0.6 },
           colors: colors,
         });
         confetti({
-          particleCount: 3,
+          particleCount: 5,
           angle: 120,
-          spread: 55,
-          origin: { x: 1 },
+          spread: 70,
+          origin: { x: 1, y: 0.6 },
           colors: colors,
         });
 
@@ -38,29 +38,47 @@ const ResultModal = ({ isOpen, reward, onClose }: ResultModalProps) => {
           requestAnimationFrame(frame);
         }
       })();
+
+      // Big burst in center
+      confetti({
+        particleCount: 100,
+        spread: 100,
+        origin: { y: 0.6 },
+        colors: colors,
+      });
     }
   }, [isOpen]);
 
   if (!isOpen) return null;
 
+  const getPrizeIcon = (reward: string) => {
+    if (reward.includes('Gel Polish')) return '💅';
+    if (reward.includes('Hydration')) return '💧';
+    if (reward.includes('Gift Card')) return '🎁';
+    if (reward.includes('Nail Design')) return '✨';
+    if (reward.includes('Elite')) return '👑';
+    if (reward.includes('25%')) return '🎉';
+    return '🎊';
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn">
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/60 backdrop-blur-md"
         onClick={onClose}
       />
 
       {/* Modal Card */}
-      <div className="relative bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 sm:p-10 animate-scaleIn">
+      <div className="relative bg-gradient-to-br from-white via-purple-50 to-pink-50 rounded-3xl shadow-2xl max-w-lg w-full p-8 sm:p-12 animate-scaleIn border-4 border-purple-200">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+          className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-white shadow-lg hover:bg-gray-100 transition-all border-2 border-gray-200"
           aria-label="Close"
         >
           <svg
-            className="w-5 h-5 text-gray-600"
+            className="w-6 h-6 text-gray-600"
             fill="none"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -74,58 +92,74 @@ const ResultModal = ({ isOpen, reward, onClose }: ResultModalProps) => {
 
         {/* Content */}
         <div className="text-center space-y-6">
-          {/* Trophy Icon */}
+          {/* Icon */}
           <div className="flex justify-center">
-            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-gray-700 to-black flex items-center justify-center shadow-lg">
-              <span className="text-4xl">🎉</span>
+            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-yellow-400 via-orange-400 to-red-500 flex items-center justify-center shadow-2xl animate-bounce">
+              <span className="text-5xl">{getPrizeIcon(reward)}</span>
             </div>
           </div>
 
           {/* Title */}
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
-            You just hit the jackpot!
-          </h2>
+          <div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
+              🎊 CONGRATULATIONS! 🎊
+            </h2>
+            <p className="text-lg text-gray-600">
+              You just won an amazing prize!
+            </p>
+          </div>
 
           {/* Reward Card */}
-          <div className="relative p-8 rounded-2xl bg-gradient-to-br from-gray-800 via-gray-900 to-black shadow-xl">
+          <div className="relative p-8 rounded-2xl bg-gradient-to-br from-purple-600 via-pink-600 to-red-600 shadow-2xl transform hover:scale-105 transition-all">
             {/* Glossy reflection effect */}
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/30 via-transparent to-transparent pointer-events-none" />
             
-            {/* Reward Amount */}
+            {/* Reward Content */}
             <div className="relative">
-              <div className="text-5xl sm:text-6xl font-bold text-white mb-2">
+              <div className="text-5xl sm:text-6xl font-bold text-white mb-3 drop-shadow-lg">
                 {reward}
               </div>
-              <div className="text-sm sm:text-base text-white/80 font-medium">
-                Coupon bundle
+              <div className="text-lg text-white/90 font-semibold">
+                Complimentary Service
               </div>
             </div>
 
+            {/* Sparkle effects */}
+            <div className="absolute top-2 right-2 text-2xl animate-pulse">✨</div>
+            <div className="absolute bottom-2 left-2 text-2xl animate-pulse delay-100">✨</div>
+            
             {/* Bottom reflection shine */}
-            <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-white/10 to-transparent rounded-b-2xl pointer-events-none" />
+            <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-white/20 to-transparent rounded-b-2xl pointer-events-none" />
           </div>
 
-          {/* Aventus Spa Info */}
-          <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-4 border border-gray-200">
-            <p className="text-gray-900 font-semibold text-sm sm:text-base">
-              Valid at Aventus Spa
+          {/* Spa Info */}
+          <div className="bg-white rounded-2xl p-6 border-2 border-purple-200 shadow-lg">
+            <p className="text-purple-900 font-bold text-lg mb-2">
+              🌟 Valid at Aventus Spa
             </p>
-            <p className="text-gray-700 text-xs sm:text-sm">
-              Premium nail care services
+            <p className="text-gray-700 mb-3">
+              94 Meadow Park Ave - Lewis Center, OH 43035
             </p>
+            <a
+              href="tel:614-618-9999"
+              className="inline-block text-purple-700 font-bold hover:underline text-lg"
+            >
+              📞 Call to Redeem: 614-618-9999
+            </a>
           </div>
 
-          {/* Get It Button */}
+          {/* Redeem Button */}
           <button
             onClick={onClose}
-            className="w-full py-4 px-6 bg-black text-white font-bold text-lg rounded-2xl shadow-lg hover:shadow-2xl hover:scale-105 transform transition-all duration-200 hover:bg-gray-900"
+            className="w-full py-5 px-6 bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 text-white font-bold text-xl rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 transform transition-all duration-300"
           >
-            Get it now
+            🎁 Claim Your Prize Now!
           </button>
 
           {/* Small print */}
           <p className="text-gray-500 text-xs">
-            Terms and conditions apply. Valid for 30 days.
+            Terms and conditions apply. Valid for 30 days from win date.<br />
+            Call us to schedule your appointment and redeem your prize!
           </p>
         </div>
       </div>
