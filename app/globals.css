@@ -2,31 +2,24 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #000000;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --font-serif: var(--font-playfair);
   --font-sans: var(--font-inter);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #ffffff;
-    --foreground: #171717;
-  }
-}
-
 body {
-  background: linear-gradient(135deg, #faf5ff 0%, #fce7f3 25%, #fee2e2 50%, #fef3c7 75%, #f0fdf4 100%);
-  background-attachment: fixed;
-  min-height: 100vh;
-  color: var(--foreground);
+  background: #ffffff;
+  color: #000000;
   font-family: var(--font-inter), sans-serif;
+  letter-spacing: 0.01em;
 }
 
-/* Fade in animation */
+/* Elegant fade in animation */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -36,55 +29,55 @@ body {
   }
 }
 
-/* Scale in animation */
+/* Elegant scale in animation */
 @keyframes scaleIn {
   from {
     opacity: 0;
-    transform: scale(0.8) translateY(-20px);
+    transform: scale(0.95);
   }
   to {
     opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
-
-/* Bounce animation */
-@keyframes bounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
+    transform: scale(1);
   }
 }
 
 .animate-fadeIn {
-  animation: fadeIn 0.3s ease-out;
+  animation: fadeIn 0.5s ease-out;
 }
 
 .animate-scaleIn {
-  animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: scaleIn 0.4s ease-out;
 }
 
-.animate-bounce {
-  animation: bounce 1s ease-in-out infinite;
-}
-
-/* Custom scrollbar */
+/* Custom elegant scrollbar */
 ::-webkit-scrollbar {
-  width: 12px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
+  background: #f5f5f5;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #9333ea, #ec4899);
-  border-radius: 10px;
+  background: #000000;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #7e22ce, #db2777);
+  background: #333333;
+}
+
+/* Typography refinements */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-playfair), serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* Elegant divider */
+.elegant-divider {
+  width: 60px;
+  height: 1px;
+  background: #000000;
+  margin: 0 auto;
 }
