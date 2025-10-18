@@ -86,6 +86,26 @@ const segments = [
 ];
 ```
 
+## 🚀 Deploy to Vercel
+
+### Quick Deploy (2 minutes):
+
+1. **Go to:** [vercel.com/new](https://vercel.com/new)
+2. **Import** your GitHub repository: `tridinhbui/jackpot`
+3. **Click Deploy** (Vercel auto-detects Next.js settings)
+4. **Done!** Your app is live at `https://your-project.vercel.app`
+
+### Detailed Instructions:
+See [DEPLOY.md](./DEPLOY.md) for complete deployment guide.
+
+### Why Deployment Works Now:
+
+✅ All code is in English  
+✅ Build tested successfully (`npm run build`)  
+✅ No TypeScript/ESLint errors  
+✅ Vercel config files added  
+✅ Code pushed to GitHub  
+
 ## License
 
 MIT
