@@ -21,9 +21,9 @@ const RegistrationForm = ({ onSubmit, hasSpun }: RegistrationFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validatePhone = (phone: string) => {
-    // Vietnamese phone number format (10-11 digits)
-    const phoneRegex = /^(0|\+84)[0-9]{9,10}$/;
-    return phoneRegex.test(phone);
+    // International phone number format (10-15 digits)
+    const phoneRegex = /^[+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,9}$/;
+    return phoneRegex.test(phone) && phone.replace(/\D/g, '').length >= 10;
   };
 
   const validateEmail = (email: string) => {
@@ -47,18 +47,18 @@ const RegistrationForm = ({ onSubmit, hasSpun }: RegistrationFormProps) => {
 
     // Validate name
     if (!formData.name.trim()) {
-      setErrors(prev => ({ ...prev, name: 'Vui lòng nhập họ tên' }));
+      setErrors(prev => ({ ...prev, name: 'Please enter your full name' }));
       return;
     }
 
     // Validate phone
     if (!formData.phone.trim()) {
-      setErrors(prev => ({ ...prev, phone: 'Vui lòng nhập số điện thoại' }));
+      setErrors(prev => ({ ...prev, phone: 'Please enter your phone number' }));
       return;
     }
 
     if (!validatePhone(formData.phone)) {
-      setErrors(prev => ({ ...prev, phone: 'Số điện thoại không hợp lệ' }));
+      setErrors(prev => ({ ...prev, phone: 'Invalid phone number format' }));
       return;
     }
 
@@ -66,19 +66,19 @@ const RegistrationForm = ({ onSubmit, hasSpun }: RegistrationFormProps) => {
     if (checkPhoneExists(formData.phone)) {
       setErrors(prev => ({ 
         ...prev, 
-        phone: 'Số điện thoại này đã được sử dụng để quay. Mỗi số chỉ được quay 1 lần!' 
+        phone: 'This phone number has already been used. Each number can only spin once!' 
       }));
       return;
     }
 
     // Validate email
     if (!formData.email.trim()) {
-      setErrors(prev => ({ ...prev, email: 'Vui lòng nhập email' }));
+      setErrors(prev => ({ ...prev, email: 'Please enter your email' }));
       return;
     }
 
     if (!validateEmail(formData.email)) {
-      setErrors(prev => ({ ...prev, email: 'Email không hợp lệ' }));
+      setErrors(prev => ({ ...prev, email: 'Invalid email format' }));
       return;
     }
 
@@ -113,13 +113,13 @@ const RegistrationForm = ({ onSubmit, hasSpun }: RegistrationFormProps) => {
             <span className="text-4xl">✅</span>
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            Cảm ơn bạn đã tham gia!
+            Thank you for participating!
           </h2>
           <p className="text-gray-600">
-            Bạn đã sử dụng lượt quay của mình.
+            You have already used your spin.
           </p>
           <p className="text-gray-500 text-sm mt-2">
-            Mỗi số điện thoại chỉ được quay 1 lần duy nhất.
+            Each phone number is limited to one spin only.
           </p>
         </div>
       </div>
@@ -135,14 +135,14 @@ const RegistrationForm = ({ onSubmit, hasSpun }: RegistrationFormProps) => {
             <span className="text-3xl">🎰</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-            Nhập thông tin để quay
+            Enter Your Information
           </h2>
           <p className="text-gray-600 text-sm sm:text-base">
-            Điền thông tin để nhận cơ hội trúng thưởng
+            Fill in your details for a chance to win
           </p>
           <div className="mt-3 inline-block bg-red-100 border border-red-300 rounded-lg px-4 py-2">
             <p className="text-red-700 text-xs sm:text-sm font-semibold">
-              ⚠️ Mỗi số điện thoại chỉ được quay 1 lần duy nhất
+              ⚠️ Each phone number can only spin once
             </p>
           </div>
         </div>
@@ -152,7 +152,7 @@ const RegistrationForm = ({ onSubmit, hasSpun }: RegistrationFormProps) => {
           {/* Name Input */}
           <div>
             <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
-              Họ và tên <span className="text-red-500">*</span>
+              Full Name <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -162,7 +162,7 @@ const RegistrationForm = ({ onSubmit, hasSpun }: RegistrationFormProps) => {
               className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-400 transition-all ${
                 errors.name ? 'border-red-500' : 'border-gray-200'
               }`}
-              placeholder="Nguyễn Văn A"
+              placeholder="John Smith"
             />
             {errors.name && (
               <p className="mt-1 text-sm text-red-500">{errors.name}</p>
@@ -172,7 +172,7 @@ const RegistrationForm = ({ onSubmit, hasSpun }: RegistrationFormProps) => {
           {/* Phone Input */}
           <div>
             <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">
-              Số điện thoại <span className="text-red-500">*</span>
+              Phone Number <span className="text-red-500">*</span>
             </label>
             <input
               type="tel"
@@ -182,7 +182,7 @@ const RegistrationForm = ({ onSubmit, hasSpun }: RegistrationFormProps) => {
               className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-400 transition-all ${
                 errors.phone ? 'border-red-500' : 'border-gray-200'
               }`}
-              placeholder="0912345678"
+              placeholder="+1 234 567 8900"
             />
             {errors.phone && (
               <p className="mt-1 text-sm text-red-500">{errors.phone}</p>
@@ -215,14 +215,14 @@ const RegistrationForm = ({ onSubmit, hasSpun }: RegistrationFormProps) => {
             disabled={isSubmitting}
             className="w-full py-4 px-6 bg-black text-white font-bold text-lg rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transform transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
-            {isSubmitting ? 'Đang xử lý...' : 'Bắt đầu quay'}
+            {isSubmitting ? 'Processing...' : 'Start Spinning'}
           </button>
         </form>
 
         {/* Footer */}
         <div className="mt-6 text-center">
           <p className="text-gray-500 text-xs">
-            Thông tin của bạn sẽ được bảo mật
+            Your information will be kept confidential
           </p>
         </div>
       </div>
@@ -239,4 +239,3 @@ const RegistrationForm = ({ onSubmit, hasSpun }: RegistrationFormProps) => {
 };
 
 export default RegistrationForm;
-

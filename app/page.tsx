@@ -75,7 +75,7 @@ export default function Home() {
               <div className="mb-6 text-center">
                 <div className="inline-block bg-white rounded-2xl shadow-lg px-6 py-4">
                   <p className="text-gray-700 font-semibold">
-                    Xin chào, <span className="text-black">{userData.name}</span>! 👋
+                    Hello, <span className="text-black">{userData.name}</span>! 👋
                   </p>
                   <p className="text-gray-500 text-sm">
                     {userData.phone} • {userData.email}
@@ -91,19 +91,19 @@ export default function Home() {
                     <span className="text-4xl">🎉</span>
                   </div>
                   <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                    Bạn đã quay rồi!
+                    You&apos;ve Already Spun!
                   </h2>
                   <p className="text-gray-600 mb-4">
-                    Cảm ơn bạn đã tham gia chương trình.
+                    Thank you for participating in our promotion.
                   </p>
                   {currentReward && (
                     <div className="bg-gradient-to-br from-gray-800 to-black rounded-2xl p-6 mb-4">
-                      <p className="text-white text-sm mb-2">Phần thưởng của bạn</p>
+                      <p className="text-white text-sm mb-2">Your Prize</p>
                       <p className="text-white text-4xl font-bold">{currentReward}</p>
                     </div>
                   )}
                   <p className="text-gray-500 text-sm">
-                    Mỗi số điện thoại chỉ được quay 1 lần duy nhất.
+                    Each phone number is limited to one spin only.
                   </p>
                 </div>
               </div>
