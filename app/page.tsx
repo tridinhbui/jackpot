@@ -56,7 +56,7 @@ export default function Home() {
       {/* Main Content - Side by Side Layout */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Important Notice Banner */}
-        <div className="mb-8 p-6 border border-black bg-white text-center">
+        <div className="mb-8 p-6 border-2 border-black bg-white text-center">
           <p className="text-sm text-black tracking-wide leading-relaxed">
             <span className="font-semibold">Important Notice:</span> Each phone number is eligible for{' '}
             <span className="font-semibold">one prize confirmation only</span>. You may participate multiple times, 
@@ -65,14 +65,14 @@ export default function Home() {
         </div>
 
         {/* Split Layout: Form | Wheel */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 border border-black min-h-[700px]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 border-2 border-black min-h-[700px]">
           {/* Left Side - Registration Form */}
-          <div className="relative border-b lg:border-b-0 lg:border-r border-black bg-white">
+          <div className="relative border-b lg:border-b-0 lg:border-r-2 border-black bg-white">
             <ElegantRegistrationForm onSubmit={handleRegistration} />
           </div>
 
           {/* Right Side - Spin Wheel */}
-          <div className="relative bg-white">
+          <div className="relative bg-white overflow-hidden">
             <ElegantSpinWheel 
               onSpinComplete={handleSpinComplete}
               userData={userData}
@@ -81,23 +81,27 @@ export default function Home() {
         </div>
 
         {/* Terms & Conditions */}
-        <div className="mt-8 p-6 border-t border-gray-200">
-          <h3 className="text-xs uppercase tracking-widest text-gray-900 font-medium mb-3">
+        <div className="mt-8 p-6 border-t-2 border-gray-200">
+          <h3 className="text-xs uppercase tracking-widest text-gray-900 font-medium mb-4">
             Terms & Conditions
           </h3>
-          <ul className="space-y-2 text-xs text-gray-600 leading-relaxed">
-            <li>• Each phone number is limited to one valid prize confirmation</li>
-            <li>• Prizes are valid for 30 days from the date of winning</li>
-            <li>• Must present valid identification when redeeming prize</li>
-            <li>• Prizes cannot be combined with other offers or promotions</li>
-            <li>• Contact us at 614.618.9999 to schedule your appointment</li>
-            <li>• Management reserves the right to verify eligibility</li>
-          </ul>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <ul className="space-y-2 text-xs text-gray-600 leading-relaxed">
+              <li>• Each phone number is limited to one valid prize confirmation</li>
+              <li>• Prizes are valid for 30 days from the date of winning</li>
+              <li>• Must present valid identification when redeeming prize</li>
+            </ul>
+            <ul className="space-y-2 text-xs text-gray-600 leading-relaxed">
+              <li>• Prizes cannot be combined with other offers or promotions</li>
+              <li>• Contact us at 614.618.9999 to schedule your appointment</li>
+              <li>• Management reserves the right to verify eligibility</li>
+            </ul>
+          </div>
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 py-12 mt-16">
+      <footer className="border-t-2 border-gray-200 py-12 mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-4">
             <div>
@@ -113,7 +117,7 @@ export default function Home() {
             <div className="pt-4">
               <a
                 href="tel:614-618-9999"
-                className="text-base font-medium text-black tracking-wide hover:text-gray-600 transition-colors inline-block border-b border-black"
+                className="text-base font-medium text-black tracking-wide hover:text-gray-600 transition-colors inline-block border-b-2 border-black"
               >
                 614.618.9999
               </a>
