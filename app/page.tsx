@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import ElegantRegistrationForm from './components/ElegantRegistrationForm';
 import ElegantSpinWheel from './components/ElegantSpinWheel';
 import ElegantResultModal from './components/ElegantResultModal';
@@ -8,41 +8,17 @@ import ElegantResultModal from './components/ElegantResultModal';
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentReward, setCurrentReward] = useState('');
-  const [isRegistered, setIsRegistered] = useState(false);
-  const [hasSpun, setHasSpun] = useState(false);
-  const [userData, setUserData] = useState({
-    name: '',
-    phone: '',
-    email: '',
-  });
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const currentUser = localStorage.getItem('currentUser');
-      if (currentUser) {
-        const user = JSON.parse(currentUser);
-        const hasUserSpun = localStorage.getItem(`hasSpun_${user.phone}`);
-        if (hasUserSpun === 'true') {
-          setHasSpun(true);
-          setIsRegistered(true);
-          setUserData(user);
-        }
-      }
-    }
-  }, []);
+  const [userData, setUserData] = useState<{ name: string; phone: string; email: string } | null>(null);
 
   const handleRegistration = (data: { name: string; phone: string; email: string }) => {
     setUserData(data);
-    setIsRegistered(true);
   };
 
   const handleSpinComplete = (reward: string) => {
     setCurrentReward(reward);
     setIsModalOpen(true);
     
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(`hasSpun_${userData.phone}`, 'true');
-      
+    if (typeof window !== 'undefined' && userData) {
       const spinResult = {
         ...userData,
         reward,
@@ -54,8 +30,6 @@ export default function Home() {
       historyList.push(spinResult);
       localStorage.setItem('spinHistory', JSON.stringify(historyList));
     }
-    
-    setHasSpun(true);
   };
 
   const handleCloseModal = () => {
@@ -79,85 +53,51 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        {hasSpun ? (
-          /* Already Participated */
-          <div className="max-w-2xl mx-auto text-center py-16">
-            <div className="mb-12">
-              <div className="w-20 h-20 border-2 border-black rounded-full mx-auto mb-8 flex items-center justify-center">
-                <div className="w-12 h-12 bg-black rounded-full"></div>
-              </div>
-              <h2 className="font-serif text-4xl font-semibold text-black mb-4 tracking-tight">
-                Thank You
-              </h2>
-              <div className="elegant-divider mb-6"></div>
-              <p className="text-gray-600 text-base tracking-wide mb-8">
-                {userData.name}, you have already participated in this promotion.
-              </p>
-            </div>
+      {/* Main Content - Side by Side Layout */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Important Notice Banner */}
+        <div className="mb-8 p-6 border border-black bg-white text-center">
+          <p className="text-sm text-black tracking-wide leading-relaxed">
+            <span className="font-semibold">Important Notice:</span> Each phone number is eligible for{' '}
+            <span className="font-semibold">one prize confirmation only</span>. You may participate multiple times, 
+            but only your first spin result with each phone number will be valid for redemption.
+          </p>
+        </div>
 
-            {currentReward && (
-              <div className="mb-12 py-8 border-y border-black">
-                <p className="text-xs uppercase tracking-widest text-gray-500 mb-3">Your Award</p>
-                <p className="font-serif text-2xl font-semibold text-black">{currentReward}</p>
-              </div>
-            )}
-
-            <div className="space-y-4 text-sm text-gray-600">
-              <p className="italic">Each entry is limited to one participation per phone number.</p>
-              <p>Contact us at <span className="font-medium text-black">614.618.9999</span> to redeem your reward.</p>
-            </div>
+        {/* Split Layout: Form | Wheel */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 border border-black min-h-[700px]">
+          {/* Left Side - Registration Form */}
+          <div className="relative border-b lg:border-b-0 lg:border-r border-black bg-white">
+            <ElegantRegistrationForm onSubmit={handleRegistration} />
           </div>
-        ) : (
-          <>
-            {/* Welcome Message (after registration) */}
-            {isRegistered && !hasSpun && (
-              <div className="text-center mb-12 py-8 border-y border-gray-200">
-                <p className="text-sm uppercase tracking-widest text-gray-600 mb-2">Welcome</p>
-                <p className="font-serif text-2xl font-semibold text-black">{userData.name}</p>
-                <p className="text-xs text-gray-500 mt-2 tracking-wide">{userData.email}</p>
-              </div>
-            )}
 
-            {/* Split Layout: Registration | Wheel */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 border border-black min-h-[600px]">
-              {/* Left Side - Registration Form */}
-              <div className="relative border-b lg:border-b-0 lg:border-r border-black bg-white">
-                {!isRegistered ? (
-                  <ElegantRegistrationForm onSubmit={handleRegistration} />
-                ) : (
-                  <div className="h-full flex flex-col justify-center items-center px-8 lg:px-16 py-12">
-                    <div className="text-center max-w-md">
-                      <div className="w-16 h-16 border-2 border-black rounded-full mx-auto mb-6 flex items-center justify-center">
-                        <div className="w-10 h-10 bg-black rounded-full"></div>
-                      </div>
-                      <h3 className="font-serif text-3xl font-semibold text-black mb-4">
-                        Registration Complete
-                      </h3>
-                      <div className="elegant-divider mb-6"></div>
-                      <p className="text-sm text-gray-600 tracking-wide leading-relaxed">
-                        You are now eligible to participate. Please proceed to spin the wheel for your exclusive reward.
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </div>
+          {/* Right Side - Spin Wheel */}
+          <div className="relative bg-white">
+            <ElegantSpinWheel 
+              onSpinComplete={handleSpinComplete}
+              userData={userData}
+            />
+          </div>
+        </div>
 
-              {/* Right Side - Spin Wheel */}
-              <div className="relative bg-white">
-                <ElegantSpinWheel 
-                  onSpinComplete={handleSpinComplete}
-                  isLocked={!isRegistered}
-                />
-              </div>
-            </div>
-          </>
-        )}
+        {/* Terms & Conditions */}
+        <div className="mt-8 p-6 border-t border-gray-200">
+          <h3 className="text-xs uppercase tracking-widest text-gray-900 font-medium mb-3">
+            Terms & Conditions
+          </h3>
+          <ul className="space-y-2 text-xs text-gray-600 leading-relaxed">
+            <li>• Each phone number is limited to one valid prize confirmation</li>
+            <li>• Prizes are valid for 30 days from the date of winning</li>
+            <li>• Must present valid identification when redeeming prize</li>
+            <li>• Prizes cannot be combined with other offers or promotions</li>
+            <li>• Contact us at 614.618.9999 to schedule your appointment</li>
+            <li>• Management reserves the right to verify eligibility</li>
+          </ul>
+        </div>
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 py-12">
+      <footer className="border-t border-gray-200 py-12 mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-4">
             <div>

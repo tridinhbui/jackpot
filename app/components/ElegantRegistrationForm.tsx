@@ -28,16 +28,6 @@ const ElegantRegistrationForm = ({ onSubmit }: ElegantRegistrationFormProps) => 
     return emailRegex.test(email);
   };
 
-  const checkPhoneExists = (phone: string) => {
-    if (typeof window === 'undefined') return false;
-    
-    const usedPhones = localStorage.getItem('usedPhones');
-    if (!usedPhones) return false;
-    
-    const phoneList = JSON.parse(usedPhones);
-    return phoneList.includes(phone);
-  };
-
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setErrors({ name: '', phone: '', email: '' });
@@ -57,14 +47,6 @@ const ElegantRegistrationForm = ({ onSubmit }: ElegantRegistrationFormProps) => 
       return;
     }
 
-    if (checkPhoneExists(formData.phone)) {
-      setErrors(prev => ({ 
-        ...prev, 
-        phone: 'This number has already been registered' 
-      }));
-      return;
-    }
-
     if (!formData.email.trim()) {
       setErrors(prev => ({ ...prev, email: 'Please enter your email address' }));
       return;
@@ -75,13 +57,7 @@ const ElegantRegistrationForm = ({ onSubmit }: ElegantRegistrationFormProps) => 
       return;
     }
 
-    // Save phone to localStorage
-    const usedPhones = localStorage.getItem('usedPhones');
-    const phoneList = usedPhones ? JSON.parse(usedPhones) : [];
-    phoneList.push(formData.phone);
-    localStorage.setItem('usedPhones', JSON.stringify(phoneList));
-
-    // Save user data
+    // Save user data (no phone restriction)
     const userData = {
       name: formData.name,
       phone: formData.phone,
@@ -94,21 +70,21 @@ const ElegantRegistrationForm = ({ onSubmit }: ElegantRegistrationFormProps) => 
   };
 
   return (
-    <div className="h-full flex flex-col justify-center px-8 lg:px-16">
+    <div className="h-full flex flex-col justify-center px-8 lg:px-16 py-12">
       <div className="max-w-md mx-auto w-full">
         {/* Header */}
-        <div className="mb-12">
-          <h2 className="font-serif text-4xl lg:text-5xl font-semibold text-black mb-4 tracking-tight">
-            Register to Participate
+        <div className="mb-10">
+          <h2 className="font-serif text-3xl lg:text-4xl font-semibold text-black mb-4 tracking-tight">
+            Enter Your Information
           </h2>
-          <div className="elegant-divider mb-6"></div>
-          <p className="text-gray-600 text-sm uppercase tracking-wider font-light">
-            Enter your information below
+          <div className="elegant-divider mb-5"></div>
+          <p className="text-gray-600 text-sm tracking-wide leading-relaxed">
+            Please provide your details to participate
           </p>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form onSubmit={handleSubmit} className="space-y-7">
           {/* Name Input */}
           <div>
             <label htmlFor="name" className="block text-xs uppercase tracking-widest text-gray-900 font-medium mb-3">
@@ -119,7 +95,7 @@ const ElegantRegistrationForm = ({ onSubmit }: ElegantRegistrationFormProps) => 
               id="name"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className={`w-full px-0 py-3 border-0 border-b-2 bg-transparent focus:outline-none focus:ring-0 transition-all text-lg ${
+              className={`w-full px-0 py-3 border-0 border-b-2 bg-transparent focus:outline-none focus:ring-0 transition-all text-base ${
                 errors.name ? 'border-black' : 'border-gray-300 focus:border-black'
               }`}
               placeholder="John Smith"
@@ -139,7 +115,7 @@ const ElegantRegistrationForm = ({ onSubmit }: ElegantRegistrationFormProps) => 
               id="phone"
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              className={`w-full px-0 py-3 border-0 border-b-2 bg-transparent focus:outline-none focus:ring-0 transition-all text-lg ${
+              className={`w-full px-0 py-3 border-0 border-b-2 bg-transparent focus:outline-none focus:ring-0 transition-all text-base ${
                 errors.phone ? 'border-black' : 'border-gray-300 focus:border-black'
               }`}
               placeholder="614 618 9999"
@@ -159,7 +135,7 @@ const ElegantRegistrationForm = ({ onSubmit }: ElegantRegistrationFormProps) => 
               id="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className={`w-full px-0 py-3 border-0 border-b-2 bg-transparent focus:outline-none focus:ring-0 transition-all text-lg ${
+              className={`w-full px-0 py-3 border-0 border-b-2 bg-transparent focus:outline-none focus:ring-0 transition-all text-base ${
                 errors.email ? 'border-black' : 'border-gray-300 focus:border-black'
               }`}
               placeholder="email@example.com"
@@ -169,26 +145,20 @@ const ElegantRegistrationForm = ({ onSubmit }: ElegantRegistrationFormProps) => 
             )}
           </div>
 
-          {/* Notice */}
-          <div className="pt-4">
-            <p className="text-xs text-gray-500 italic tracking-wide leading-relaxed">
-              By submitting this form, you agree to participate once. Each phone number is limited to a single entry.
-            </p>
-          </div>
-
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full py-4 px-8 bg-black text-white text-sm uppercase tracking-widest font-medium hover:bg-gray-900 transition-all duration-300 border border-black"
+            className="w-full py-4 px-8 bg-black text-white text-xs uppercase tracking-widest font-medium hover:bg-gray-900 transition-all duration-300 border border-black mt-8"
           >
-            Submit Entry
+            Continue to Spin
           </button>
         </form>
 
-        {/* Footer */}
-        <div className="mt-12 text-center">
-          <p className="text-xs text-gray-400 tracking-wide">
-            Your information is secure and confidential
+        {/* Important Notice */}
+        <div className="mt-8 pt-6 border-t border-gray-200">
+          <p className="text-xs text-gray-500 italic tracking-wide leading-relaxed">
+            Important: Each phone number is eligible for one prize confirmation only. 
+            Subsequent spins with the same number will not be valid for redemption.
           </p>
         </div>
       </div>
@@ -197,4 +167,3 @@ const ElegantRegistrationForm = ({ onSubmit }: ElegantRegistrationFormProps) => 
 };
 
 export default ElegantRegistrationForm;
-
